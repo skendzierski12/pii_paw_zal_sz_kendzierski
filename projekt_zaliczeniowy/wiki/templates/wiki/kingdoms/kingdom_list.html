@@ -1,0 +1,40 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}Królestwa{% endblock %}
+
+{% block content %}
+<h1 style="text-align: center; font-size: 48px; margin-bottom: 50px;">
+    Królestwa
+</h1>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+    {% for kingdom in kingdoms %}
+    <div style="
+        background: rgba(0, 0, 0, 0.6);
+        border: 2px solid #d4af37;
+        border-radius: 10px;
+        padding: 25px;
+        transition: all 0.3s;
+        cursor: pointer;
+    " onmouseover="this.style.transform='scale(1.05)'; this.style.borderColor='#fff';" 
+       onmouseout="this.style.transform='scale(1)'; this.style.borderColor='#d4af37';"
+       onclick="window.location.href='/kingdoms/{{ kingdom.id }}/'">
+        
+        <h2 style="color: #d4af37; margin-bottom: 15px; font-size: 28px;">
+            {{ kingdom.name }}
+        </h2>
+        
+        <p style="color: #c0c0c0; line-height: 1.6; margin-bottom: 15px;">
+            {{ kingdom.description|truncatewords:30 }}
+        </p>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 20px; font-size: 14px; color: #888;">
+            <span>🏰 {{ kingdom.capital.name }}</span>
+            <span>👥 {{ kingdom.population|default:"?" }}</span>
+        </div>
+    </div>
+    {% empty %}
+    <p style="text-align: center; color: #888;">Brak królestw w bazie danych.</p>
+    {% endfor %}
+</div>
+{% endblock %}

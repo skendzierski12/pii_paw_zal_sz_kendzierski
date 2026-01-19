@@ -1,0 +1,99 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}Plaga{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a0000 100%) !important;
+    }
+    
+    .plague-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .map-container {
+        position: relative;
+        margin: 40px 0;
+        border: 3px solid #8b0000;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 30px rgba(139, 0, 0, 0.5);
+    }
+    
+    .map-container img {
+        width: 100%;
+        height: auto;
+        display: block;
+        filter: grayscale(50%) brightness(0.7);
+    }
+</style>
+
+<div class="plague-container">
+    <h1 style="text-align: center; font-size: 56px; margin-bottom: 30px; color: #8b0000; text-shadow: 0 0 20px rgba(139, 0, 0, 0.8);">
+        PLAGA
+    </h1>
+    
+    <div style="background: rgba(0, 0, 0, 0.8); border: 2px solid #8b0000; border-radius: 10px; padding: 40px; margin-bottom: 40px;">
+        
+        <div style="margin-bottom: 30px;">
+            <h2 style="color: #8b0000; font-size: 24px; margin-bottom: 10px;">📜 Historia</h2>
+            <p style="color: #c0c0c0; line-height: 1.8; font-size: 18px;">
+                {{ plague.history }}
+            </p>
+        </div>
+        
+        <div style="margin-bottom: 30px;">
+            <h2 style="color: #8b0000; font-size: 24px; margin-bottom: 10px;">☠️ Opis</h2>
+            <p style="color: #c0c0c0; line-height: 1.8; font-size: 18px;">
+                {{ plague.description }}
+            </p>
+        </div>
+        
+        <div style="margin-bottom: 30px;">
+            <h2 style="color: #8b0000; font-size: 24px; margin-bottom: 10px;">🩸 Objawy</h2>
+            <p style="color: #c0c0c0; line-height: 1.8; font-size: 18px;">
+                {{ plague.symptomps }}
+            </p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px;">
+            <div>
+                <h3 style="color: #8b0000; font-size: 20px; margin-bottom: 10px;">💀 Ofiary śmiertelne</h3>
+                <p style="color: #ff6666; font-size: 28px; font-weight: bold;">{{ plague.death|default:"Nieznana liczba" }}</p>
+            </div>
+            
+            <div>
+                <h3 style="color: #8b0000; font-size: 20px; margin-bottom: 10px;">🌍 Epicentrum</h3>
+                <p style="color: #e0e0e0; font-size: 18px;">{{ plague.epicentre.name }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <h2 style="text-align: center; color: #8b0000; font-size: 32px; margin-bottom: 30px;">
+        Mapa Zarażenia
+    </h2>
+    
+    <div class="map-container">
+        <!-- TU WSTAW LINK DO TWOJEGO PNG -->
+        <img src="/static/plague_map.png" alt="Mapa zarażenia" />
+        
+        <!-- Epicentra będą dodane przez JavaScript pobierając z /api/epicentres/ -->
+        <div id="epicentre-markers"></div>
+    </div>
+    
+    <p style="text-align: center; color: #666; margin-top: 20px; font-style: italic;">
+        Czerwone punkty oznaczają epicentra zarażenia
+    </p>
+</div>
+
+<script>
+    // TODO: Pobierz epicentra z API i nałóż na mapę
+    // fetch('/api/epicentres/')
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         // Dodaj markery na mapę
+    //     });
+</script>
+{% endblock %}

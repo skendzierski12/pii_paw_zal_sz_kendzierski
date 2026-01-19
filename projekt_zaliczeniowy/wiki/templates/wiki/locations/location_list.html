@@ -1,0 +1,51 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}Lokacje{% endblock %}
+
+{% block content %}
+<h1 style="text-align: center; font-size: 48px; margin-bottom: 50px;">
+    Lokacje Świata
+</h1>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+    {% for location in locations %}
+    <div style="
+        background: rgba(0, 0, 0, 0.6);
+        border: 2px solid #d4af37;
+        border-radius: 10px;
+        padding: 25px;
+        transition: all 0.3s;
+        cursor: pointer;
+    " onmouseover="this.style.transform='scale(1.05)'; this.style.borderColor='#fff';" 
+       onmouseout="this.style.transform='scale(1)'; this.style.borderColor='#d4af37';"
+       onclick="window.location.href='/locations/{{ location.id }}/'">
+        
+        <h2 style="color: #d4af37; margin-bottom: 15px; font-size: 28px;">
+            {{ location.name }}
+        </h2>
+        
+        <p style="color: #c0c0c0; line-height: 1.6; margin-bottom: 15px;">
+            {{ location.description|truncatewords:30 }}
+        </p>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 20px; font-size: 14px; color: #888;">
+            <span>🌍 {{ location.continent.name }}</span>
+            <span>🏛️ {{ location.location_type }}</span>
+            <span>👥 {{ location.population|default:"?" }}</span>
+        </div>
+        
+        {% if location.is_safe_from_plague %}
+        <div style="margin-top: 15px; padding: 10px; background: rgba(0, 128, 0, 0.2); border: 1px solid #00ff00; border-radius: 5px; text-align: center; color: #00ff00;">
+            ✓ Bezpieczna od plagi
+        </div>
+        {% else %}
+        <div style="margin-top: 15px; padding: 10px; background: rgba(139, 0, 0, 0.2); border: 1px solid #8b0000; border-radius: 5px; text-align: center; color: #ff6666;">
+            ⚠ Zagrożona plagą
+        </div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p style="text-align: center; color: #888;">Brak lokacji w bazie danych.</p>
+    {% endfor %}
+</div>
+{% endblock %}

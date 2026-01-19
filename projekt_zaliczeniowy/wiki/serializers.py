@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from model import 
+from .models import Continent, Location, Race, Guild, Kingdom, Plague, Epicentre, Item
+
+
 
 class ContinentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,6 +27,9 @@ class KingdomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Kingdom
         fields = '__all__'
+
+    def validate (self, data):
+        capital = data.get('capital')
  
 class PlagueSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,0 +1,58 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}{{ location.name }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto;">
+    <a href="/locations/" style="color: #d4af37; text-decoration: none; font-size: 16px;">
+        ← Powrót do lokacji
+    </a>
+    
+    <h1 style="font-size: 56px; margin: 30px 0; text-align: center;">
+        {{ location.name }}
+    </h1>
+    
+    <div style="background: rgba(0, 0, 0, 0.6); border: 2px solid #d4af37; border-radius: 10px; padding: 40px; margin-top: 30px;">
+        
+        <div style="margin-bottom: 30px;">
+            <h2 style="color: #d4af37; font-size: 24px; margin-bottom: 10px;">Opis</h2>
+            <p style="color: #c0c0c0; line-height: 1.8; font-size: 18px;">
+                {{ location.description }}
+            </p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px;">
+            <div>
+                <h3 style="color: #d4af37; font-size: 20px; margin-bottom: 10px;">🌍 Kontynent</h3>
+                <p style="color: #e0e0e0; font-size: 18px;">{{ location.continent.name }}</p>
+            </div>
+            
+            <div>
+                <h3 style="color: #d4af37; font-size: 20px; margin-bottom: 10px;">🏛️ Typ</h3>
+                <p style="color: #e0e0e0; font-size: 18px;">{{ location.location_type }}</p>
+            </div>
+            
+            <div>
+                <h3 style="color: #d4af37; font-size: 20px; margin-bottom: 10px;">👥 Populacja</h3>
+                <p style="color: #e0e0e0; font-size: 18px;">{{ location.population|default:"Nieznana" }}</p>
+            </div>
+            
+            <div>
+                <h3 style="color: #d4af37; font-size: 20px; margin-bottom: 10px;">⚕️ Status plagi</h3>
+                {% if location.is_safe_from_plague %}
+                <p style="color: #00ff00; font-size: 18px;">✓ Bezpieczna</p>
+                {% else %}
+                <p style="color: #ff6666; font-size: 18px;">⚠ Zagrożona</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if location.emblem %}
+        <div style="margin-top: 40px; text-align: center;">
+            <h3 style="color: #d4af37; font-size: 20px; margin-bottom: 20px;">Herb</h3>
+            <img src="{{ location.emblem.url }}" alt="Herb {{ location.name }}" style="max-width: 300px; border: 2px solid #d4af37; border-radius: 10px;">
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

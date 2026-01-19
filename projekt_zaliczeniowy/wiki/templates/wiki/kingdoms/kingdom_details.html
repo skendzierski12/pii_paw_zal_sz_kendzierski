@@ -1,0 +1,37 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}{{ kingdom.name }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto;">
+    <a href="/kingdoms/" style="color: #d4af37; text-decoration: none; font-size: 16px;">
+        ← Powrót do królestw
+    </a>
+    
+    <h1 style="font-size: 56px; margin: 30px 0; text-align: center;">
+        {{ kingdom.name }}
+    </h1>
+    
+    <div style="background: rgba(0, 0, 0, 0.6); border: 2px solid #d4af37; border-radius: 10px; padding: 40px; margin-top: 30px;">
+        
+        <div style="margin-bottom: 30px;">
+            <h2 style="color: #d4af37; font-size: 24px; margin-bottom: 10px;">Opis</h2>
+            <p style="color: #c0c0c0; line-height: 1.8; font-size: 18px;">
+                {{ kingdom.description }}
+            </p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px;">
+            <div>
+                <h3 style="color: #d4af37; font-size: 20px; margin-bottom: 10px;">🏰 Stolica</h3>
+                <p style="color: #e0e0e0; font-size: 18px;">{{ kingdom.capital.name }}</p>
+            </div>
+            
+            <div>
+                <h3 style="color: #d4af37; font-size: 20px; margin-bottom: 10px;">👥 Populacja</h3>
+                <p style="color: #e0e0e0; font-size: 18px;">{{ kingdom.population|default:"Nieznana" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

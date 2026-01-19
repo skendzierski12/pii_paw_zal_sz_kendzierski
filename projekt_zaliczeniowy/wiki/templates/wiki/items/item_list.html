@@ -1,0 +1,42 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}Przedmioty{% endblock %}
+
+{% block content %}
+<h1 style="text-align: center; font-size: 48px; margin-bottom: 50px;">
+    Przedmioty
+</h1>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;">
+    {% for item in items %}
+    <div style="
+        background: rgba(0, 0, 0, 0.6);
+        border: 2px solid #d4af37;
+        border-radius: 10px;
+        padding: 25px;
+        transition: all 0.3s;
+        cursor: pointer;
+    " onmouseover="this.style.transform='scale(1.05)'; this.style.borderColor='#fff';" 
+       onmouseout="this.style.transform='scale(1)'; this.style.borderColor='#d4af37';"
+       onclick="window.location.href='/items/{{ item.id }}/'">
+        
+        <h2 style="color: #d4af37; margin-bottom: 15px; font-size: 28px;">
+            {{ item.name }}
+        </h2>
+        
+        <p style="color: #c0c0c0; line-height: 1.6; margin-bottom: 15px;">
+            {{ item.description|truncatewords:20 }}
+        </p>
+        
+        {% if item.effect %}
+        <div style="margin-top: 15px; padding: 10px; background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; border-radius: 5px;">
+            <span style="color: #d4af37; font-weight: bold;">Efekt:</span> 
+            <span style="color: #c0c0c0;">{{ item.effect }}</span>
+        </div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p style="text-align: center; color: #888;">Brak przedmiotów w bazie danych.</p>
+    {% endfor %}
+</div>
+{% endblock %}
