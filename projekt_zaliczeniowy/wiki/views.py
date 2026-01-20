@@ -3,11 +3,16 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Continent, Kingdom, Race, Location, Guild, Plague, Epicentre, Item
 from .serializers import ContinentSerializer, KingdomSerializer, RaceSerializer, LocationSerializer, GuildSerializer, PlagueSerializer, EpicentreSerializer, ItemSerializer
+from rest_framework.decorators import api_view, permission_classes
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect
+from .permissions import IsAdminOrEditor
 
 
 #Listy API
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAdminOrEditor])
 def continent_list(request):
     if request.method == 'GET':
         continents = Continent.objects.all()
@@ -22,6 +27,7 @@ def continent_list(request):
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAdminOrEditor])
 def kingdom_list(request):
     if request.method == 'GET':
         kingdoms = Kingdom.objects.all()
@@ -36,6 +42,7 @@ def kingdom_list(request):
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAdminOrEditor])
 def race_list(request):
     if request.method == 'GET':
         races = Race.objects.all()
@@ -50,6 +57,7 @@ def race_list(request):
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAdminOrEditor])
 def location_list(request):
     if request.method == 'GET':
         locations = Location.objects.all()
@@ -64,6 +72,7 @@ def location_list(request):
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAdminOrEditor])
 def guild_list(request):
     if request.method == 'GET':
         guilds = Guild.objects.all()
@@ -78,6 +87,7 @@ def guild_list(request):
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAdminOrEditor])
 def epicentre_list(request):
     if request.method == 'GET':
         epicentres = Epicentre.objects.all()
@@ -93,6 +103,7 @@ def epicentre_list(request):
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAdminOrEditor])
 def item_list(request):
     if request.method == 'GET':
         items = Item.objects.all()
@@ -110,6 +121,7 @@ def item_list(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAdminOrEditor])
 def continent_detail(request, pk):
     try:
         continent = Continent.objects.get(pk=pk)
@@ -132,6 +144,7 @@ def continent_detail(request, pk):
         return Response(status=204)
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAdminOrEditor])
 def location_detail(request, pk):
     try:
         location = Location.objects.get(pk=pk)
@@ -152,6 +165,7 @@ def location_detail(request, pk):
         return Response(status=204)
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAdminOrEditor])
 def race_detail(request, pk):
     try:
         race = Race.objects.get(pk=pk)
@@ -172,6 +186,7 @@ def race_detail(request, pk):
         return Response(status=204)
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAdminOrEditor])
 def guild_detail(request, pk):
     try:
         guild = Guild.objects.get(pk=pk)
@@ -192,6 +207,7 @@ def guild_detail(request, pk):
         return Response(status=204)
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAdminOrEditor])
 def kingdom_detail(request, pk):
     try:
         kingdom = Kingdom.objects.get(pk=pk)
@@ -211,9 +227,10 @@ def kingdom_detail(request, pk):
         kingdom.delete()
         return Response(status=204)
 
-@api_view(['GET', 'PUT'])  # bez DELETE
-def plague_detail(request):  # bez pk
-    plague = Plague.objects.first()  # zawsze pierwszy (i jedyny)
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAdminOrEditor])
+def plague_detail(request): 
+    plague = Plague.objects.first()
     
     if request.method == 'GET':
         serializer = PlagueSerializer(plague)
@@ -227,6 +244,7 @@ def plague_detail(request):  # bez pk
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAdminOrEditor])
 def item_detail(request, pk):
     try:
         item = Item.objects.get(pk=pk)
@@ -302,3 +320,22 @@ def item_details_html(request, pk):
 def plague_html(request):
     plague = Plague.objects.first()
     return render(request, 'wiki/plague/plague.html', {'plague': plague})
+
+
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else: 
+            return render(request, 'wiki/auth/login.html', {'error': 'Nieprawidłowe dane logowania'})
+    return render(request, 'wiki/auth/login.html')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
+

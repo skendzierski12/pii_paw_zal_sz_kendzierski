@@ -71,6 +71,12 @@
             <a href="/kingdoms/">Kingdoms</a>
             <a href="/items/">Items</a>
             <a href="/plague/">The Plague</a>
+
+	    {% if user.is_authenticated %}
+	    	<a href="/logout/" style ="color: #ff6666;">Logout ({{ user.username }}) </a>
+	    {% else %}
+	    <a href="/login/">Login</a>
+	    {% endif %}
         </nav>
     </header>
     

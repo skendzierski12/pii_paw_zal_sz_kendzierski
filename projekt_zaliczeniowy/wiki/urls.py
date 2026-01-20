@@ -32,9 +32,9 @@ urlpatterns = [
         path('items/', views.item_list_html, name='item-list'),
         path('items/<int:pk>/', views.item_details_html, name='item-details'),
         path('plague/', views.plague_html, name='plague'),
-    
 
-
+        path('login/', views.login_view, name = 'login'),
+        path('logout/', views.logout_view, name = 'logout'),
 
 
 
