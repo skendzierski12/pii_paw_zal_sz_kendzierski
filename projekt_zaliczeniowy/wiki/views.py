@@ -7,7 +7,8 @@ from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from .permissions import IsAdminOrEditor
-
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 
 #Listy API
 
@@ -282,7 +283,7 @@ def location_list_html(request):
     return render(request, 'wiki/locations/location_list.html', {'locations': locations})
 
 def location_details_html(request, pk):
-    location = get_object_or_404(Location, pk=pk)
+    location = Location.objects.get(pk=pk)
     return render(request, 'wiki/locations/location_details.html', {'location': location})
 
 def race_list_html(request):
@@ -290,7 +291,7 @@ def race_list_html(request):
     return render(request, 'wiki/races/race_list.html', {'races': races})
 
 def race_details_html(request, pk):
-    race = get_object_or_404(Race, pk=pk)
+    race = Race.objects.get(pk=pk)
     return render(request, 'wiki/races/race_details.html', {'race': race})
 
 def guild_list_html(request):
@@ -298,7 +299,7 @@ def guild_list_html(request):
     return render(request, 'wiki/guilds/guild_list.html', {'guilds': guilds})
 
 def guild_details_html(request, pk):
-    guild = get_object_or_404(Guild, pk=pk)
+    guild = Guild.objects.get(pk=pk)
     return render(request, 'wiki/guilds/guild_details.html', {'guild': guild})
 
 def kingdom_list_html(request):
@@ -306,7 +307,7 @@ def kingdom_list_html(request):
     return render(request, 'wiki/kingdoms/kingdom_list.html', {'kingdoms': kingdoms})
 
 def kingdom_details_html(request, pk):
-    kingdom = get_object_or_404(Kingdom, pk=pk)
+    kingdom = Kingdom.objects.get(pk=pk)
     return render(request, 'wiki/kingdoms/kingdom_details.html', {'kingdom': kingdom})
 
 def item_list_html(request):
@@ -314,7 +315,7 @@ def item_list_html(request):
     return render(request, 'wiki/items/item_list.html', {'items': items})
 
 def item_details_html(request, pk):
-    item = get_object_or_404(Item, pk=pk)
+    item = Item.objects.get (pk=pk)
     return render(request, 'wiki/items/item_details.html', {'item': item})
 
 def plague_html(request):
@@ -338,4 +339,27 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+def register_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, 'Konto zostało utworzone pomyślnie!')
+            return redirect('home')
+        else:
+            messages.error(request, 'Login lub hasło niepoprawne!')
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'wiki/auth/register.html', {'form': form})
+
+
+
+
+
+
+
+
 
