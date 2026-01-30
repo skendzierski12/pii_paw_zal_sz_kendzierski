@@ -1,17 +1,74 @@
 from django.shortcuts import render
-from rest_framework import generics
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView
+from django.contrib.auth.forms import UserCreationForm
+from rest_framework import generics, status, permissions
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
 from .models import Continent, Kingdom, Race, Location, Guild, Plague, Epicentre, Item
-from .serializers import ContinentSerializer, KingdomSerializer, RaceSerializer, LocationSerializer, GuildSerializer, PlagueSerializer, EpicentreSerializer, ItemSerializer
+from .serializers import *
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from .permissions import IsAdminOrEditor
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from django.contrib.auth.views import LoginView
 
 #Listy API
+
+class APIRootView(APIView):
+    def get(self, request):
+        return Response({
+            'status': 'API is running',
+            'endpoints': {
+                'continents': '/api/continents/',
+                'locations': '/api/locations/',
+                'races': '/api/races/',
+                'kingdoms':'/api/kingdoms/',
+                'guilds':'/api/guilds/',
+                'items':'/api/items/',
+                'plague':'/api/plague/',
+
+
+
+            }
+        })
+
+#class RegisterAPIView(APIView):
+#    permission_classes = [permissions.AllowAny]
+#
+#    def post(self, request):
+#        serializer = UserRegisterSerializer(data=request.data)
+#        if serializer.is_valid():
+#            serializer.save()
+#            return Response(
+#                {"message": "Użytkownik został zarejestrowany."},
+#                status=status.HTTP_201_CREATED
+#            )
+#        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class RegisterAndLoginAPIView(APIView):
+    permission_classes = [permissions.AllowAny] 
+
+    def post(self, request):
+        serializer = RegisterAndLoginSerializer(data=request.data) 
+        
+        if serializer.is_valid():
+            user = serializer.save()
+            token, created = Token.objects.get_or_create(user=user) 
+            
+            return Response({
+                "message": "Użytkownik zarejestrowany i zalogowany.",
+                "user": {
+                    "username": user.username,
+                    "email": user.email
+                },
+                "token": token.key # Zwrócenie tokena w odpowiedzi
+            }, status=status.HTTP_201_CREATED) 
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ContinentList(generics.ListCreateAPIView):
     queryset=Continent.objects.all()
@@ -405,37 +462,61 @@ def plague_html(request):
     return render(request, 'wiki/plague/plague.html', {'plague': plague})
 
 
-def login_view(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('home')
-        else: 
-            return render(request, 'wiki/auth/login.html', {'error': 'Nieprawidłowe dane logowania'})
-    return render(request, 'wiki/auth/login.html')
+class MyLoginView(LoginView):
+    template_name = 'wiki/auth/login.html'
 
 
-def logout_view(request):
-    logout(request)
-    return redirect('home')
+#def login_view(request):
+#    if request.method == "POST":
+#        username = request.POST.get('username')
+#        password = request.POST.get('password')
+#        user = authenticate(request, username=username, password=password)
+#        if user is not None:
+#            login(request, user)
+#            return redirect('home')
+#        else: 
+#            return render(request, 'wiki/auth/login.html', {'error': 'Nieprawidłowe dane logowania'})
+#    return render(request, 'wiki/auth/login.html')
 
-def register_view(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, 'Konto zostało utworzone pomyślnie!')
-            return redirect('home')
-        else:
-            messages.error(request, 'Login lub hasło niepoprawne!')
-    else:
-        form = UserCreationForm()
 
-    return render(request, 'wiki/auth/register.html', {'form': form})
+
+
+#def logout_view(request):
+#    logout(request)
+#    return redirect('home')
+
+
+
+class RegisterView(CreateView):
+    template_name = 'wiki/auth/register.html'
+    form_class = UserCreationForm
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        login(self.request, self.object)
+        messages.success(self.request, 'Konto zostało pomyślnie utworzone!')
+        return response
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Login lub hasło niepoprawne!')
+        return super().form_invalid(form)
+
+
+#def register_view(request):
+#    if request.method == 'POST':
+#        form = UserCreationForm(request.POST)
+#        if form.is_valid():
+#            user = form.save()
+#            login(request, user)
+#            messages.success(request, 'Konto zostało utworzone pomyślnie!')
+#            return redirect('home')
+#        else:
+#            messages.error(request, 'Login lub hasło niepoprawne!')
+#    else:
+#        form = UserCreationForm()
+#
+#    return render(request, 'wiki/auth/register.html', {'form': form})
 
 
 

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Continent, Location, Race, Guild, Kingdom, Plague, Epicentre, Item
+from django.contrib.auth.models import User
 
 
 
@@ -28,9 +29,6 @@ class KingdomSerializer(serializers.ModelSerializer):
         model = Kingdom
         fields = '__all__'
 
-    def validate (self, data):
-        capital = data.get('capital')
- 
 class PlagueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plague
@@ -45,4 +43,32 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = '__all__'
-        
+
+#class UserRegisterSerializer(serializers.ModelSerializer):
+#    password = serializers.ChatField(write_only=True)
+#
+#    class Meta:
+#        model = User
+#        fields = ['username', 'email', 'password']
+#    def create(self, validated_data):
+#        user = User.objects.create_user(
+#            username=validated_data['username'],
+#            email=validated_data.get('email', ''),
+#            password=validated_data['password']
+#        )
+#        return user        
+
+class RegisterAndLoginSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email', ''),
+            password=validated_data['password']
+        )
+        return user

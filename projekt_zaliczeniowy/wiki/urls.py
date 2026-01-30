@@ -1,7 +1,13 @@
 from django.urls import path
+from django.contrib.auth.views import LogoutView
+from rest_framework.authtoken.views import obtain_auth_token
 from . import views
 
 urlpatterns = [
+        
+        path('api/login/', obtain_auth_token, name = 'api_login'),
+        path('api/register/', views.RegisterAndLoginAPIView.as_view(), name = 'api_register'),
+        path('api/', views.APIRootView.as_view(), name='api-root'),
         path('api/continents/', views.ContinentList.as_view(), name = 'continent_list'),
         path('api/locations/', views.LocationList.as_view(), name = 'location_list'),
         path('api/races/', views.RaceList.as_view(), name = 'race_list'),
@@ -33,10 +39,9 @@ urlpatterns = [
         path('items/<int:pk>/', views.item_details_html, name='item-details'),
         path('plague/', views.plague_html, name='plague'),
 
-        path('login/', views.login_view, name = 'login'),
-        path('logout/', views.logout_view, name = 'logout'),
-        path('register/', views.register_view, name = 'register'),
-
+        path('login/', views.MyLoginView.as_view(), name='login'),
+        path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
+        path('register/', views.RegisterView.as_view(), name='register'),
 
 
      

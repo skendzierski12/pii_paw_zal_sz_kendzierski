@@ -1,11 +1,15 @@
 {% extends "wiki/base.html" %}
 
-{% block title %}Logowanie{% endblock %}
+{% block title %}Rejestracja{% endblock %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Zarejestruj się</button>
-</form>
+    <h1>Załóż nowe konto</h1>
+    
+    {{ form.non_field_errors }}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Zarejestruj się</button>
+    </form>
 {% endblock %}

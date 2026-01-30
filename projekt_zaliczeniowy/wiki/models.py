@@ -20,7 +20,6 @@ class Location(models.Model):
     name = models.CharField(max_length = 100)
     description = models.TextField()
     continent = models.ForeignKey(Continent, on_delete=models.CASCADE)
-    location_type = models.CharField(max_length=50)
     population = models.IntegerField()
     location_type = models.CharField(max_length=50)
     is_safe_from_plague = models.BooleanField(default=False)

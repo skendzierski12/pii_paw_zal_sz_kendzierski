@@ -63,20 +63,27 @@
 <body>
     <header>
         <nav>
-            <a href="/">Home</a>
-            <a href="/continents/">Continents</a>
-            <a href="/locations/">Locations</a>
-            <a href="/races/">Races</a>
-            <a href="/guilds/">Guilds</a>
-            <a href="/kingdoms/">Kingdoms</a>
-            <a href="/items/">Items</a>
-            <a href="/plague/">The Plague</a>
+            <a href="/">Strona Główna</a>
+            <a href="/continents/">Kontynenty</a>
+            <a href="/locations/">Lokacje</a>
+            <a href="/races/">Rasy</a>
+            <a href="/guilds/">Guildie</a>
+            <a href="/kingdoms/">Królestwa</a>
+            <a href="/items/">Przedmioty</a>
+            <a href="/plague/">Plaga</a>
 
 	    {% if user.is_authenticated %}
-	    	<a href="/logout/" style ="color: #ff6666;">Logout ({{ user.username }}) </a>
+	    	<form method="post" action="{% url 'logout' %}">
+    		{% csrf_token %}
+    		<button type="submit" style="background:none; border:none; color:inherit; cursor:pointer; padding:0;">
+        		Wyloguj się
+   		</button>
+		</form>
 	    {% else %}
-	    <a href="/login/">Login</a>
+	    <a href="/login/">Zaloguj się</a>
+	    <a href="/register/">Nie masz konta? Zarejestruj Się!</a>
 	    {% endif %}
+
         </nav>
     </header>
     

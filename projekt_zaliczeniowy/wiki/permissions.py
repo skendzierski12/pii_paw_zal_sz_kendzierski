@@ -7,13 +7,13 @@ class IsAdminOrEditor(permissions.BasePermission):
         if not request.user.is_authenticated:
             return False
 
-        if request.method == 'GET':
+        if request.method in permissions.SAFE_METHODS:
             return True
 
         if request.method in ['POST', 'DELETE']:
             return request.user.is_staff
         
-        if request.method == 'PUT':
+        if request.method == ['PUT', 'PATCH']:
             return request.user.is_staff or request.user.groups.filter(name='Editor').exists()
         
         return False
