@@ -520,9 +520,34 @@ class RegisterView(CreateView):
 
 
 
+class ItemSearchView(APIView):
+    
+    premission_classes = [IsAdminOrEditor]
+    def get(self, request):
+
+        search_phrase = request.query_params.get('name', None) 
+
+        if query:
+            items = Item.objects.filter(name__icontains=query)
+        else:
+            items = Item.objects.all()
+
+        serializer = ItemSerializer(items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 
+class EpicentreSearchByDangerView(APIView):
+    premission_classes = [IsAdminOrEditor]
 
+    def get(self, request):
+        level = request.query_params.get('level', None)
 
+        if level:
+            results = Epicentre.objects.filter(danger_level=level)
+        else:
+            results = Epicentre.objects.all()
+        
+        serializer = EpicentreSerializer(results, many=True)
+        return Response(serializer.data)
 

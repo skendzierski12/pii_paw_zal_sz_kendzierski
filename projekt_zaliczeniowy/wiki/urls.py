@@ -9,12 +9,15 @@ urlpatterns = [
         path('api/register/', views.RegisterAndLoginAPIView.as_view(), name = 'api_register'),
         path('api/', views.APIRootView.as_view(), name='api-root'),
         path('api/continents/', views.ContinentList.as_view(), name = 'continent_list'),
+
         path('api/locations/', views.LocationList.as_view(), name = 'location_list'),
         path('api/races/', views.RaceList.as_view(), name = 'race_list'),
         path('api/guilds/', views.GuildList.as_view(), name = 'guild_list'),
         path('api/kingdoms/', views.KingdomList.as_view(), name = 'kingdom_list'),
         path('api/epicentres/', views.EpicentreList.as_view(), name = 'epicentre_list'),
+        path('api/epicentres/search/', views.EpicentreSearchByDangerView.as_view(), name='epicentre_search'),
         path('api/items/', views.ItemList.as_view(), name = 'item_list'),
+        path('api/items/search/', views.ItemSearchView.as_view, name='item_search'),
 
         path('api/continents/<int:pk>/', views.ContinentDetail.as_view(), name='continent_detail'),
         path('api/locations/<int:pk>/', views.LocationDetail.as_view(), name='location_detail'),
